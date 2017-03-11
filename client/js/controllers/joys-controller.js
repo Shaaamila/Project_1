@@ -1,20 +1,20 @@
-app.controller('joysController' , ['$scope','$resource', 
+app.controller('joysController' , ['$scope','$resource', function ($scope, $resource){
+	var Joy = $resource('/api/joys');
 
-	function ($scope, $resource){
-
-		var Joy = $resource('/api/joys');
-
-		$scope.joys = [
-			{ name: "The tree blossomed today!"},
-			{ name: "The sky is clear!"}
-
-		]
+	Joy.query(function (result){
+		$scope.joys = result;
+	})
+		$scope.joys = []
+		
 		$scope.createJoy = function() {
 			// $scope.joys.push({ name: $scope.joyName });
 			// $scope.joyName = '';
 			var joy = new Joy();
 			joy.name = $scope.joyName; 
-			joy.$save();
+			joy.$save(function (result){
+				$scope.joys.push(result);
+				$scope.joyName = '';
+			});
 		}
 
 }]);
